@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Form</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .donation-btn {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .donation-btn span {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.875em;
+        }
+
+        .active {
+            background-color: #28a745 !important;
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h1>DONATE AS:</h1>
+        <div class="container">
+            <a id="individual-btn" href="javascript:void(0);" type="button" class="btn btn-success">An Individual</a>
+            <a id="company-btn" href="javascript:void(0);" type="button" class="btn btn-outline-success">A Company</a>
+        </div>
+        <h2 class="text-center">I WOULD LIKE TO DONATE:</h2>
+        <div class="row mt-4 donation-buttons">
+            <div class="col-md-3">
+                <button id="donate-11" class="btn btn-success donation-btn active">
+                    $11
+                    <span>= a week's worth of meals</span>
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button id="donate-33" class="btn btn-success donation-btn">
+                    $33
+                    <span>= Meals for a mum and two kids</span>
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button id="donate-52" class="btn btn-success donation-btn">
+                    $52
+                    <span>= 100 meals for families in need</span>
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button id="donate-other" class="btn btn-success donation-btn">
+                    Other
+                </button>
+            </div>
+        </div>
+        <form class="mt-4" id="donation-form">
+            <div id="amount-group" class="form-row hidden">
+                <div class="form-group col-md-12">
+                    <label for="amount">Enter Amount</label>
+                    <input type="number" class="form-control" id="amount" placeholder="Enter Your Amount">
+                    <span class="error" id="amount-error"></span>
+                </div>
+            </div>
+            <div id="company-group" class="hidden">
+                <div class="form-group">
+                    <label for="companyName">Company Name</label>
+                    <input type="text" class="form-control" id="companyName" placeholder="Company Name">
+                    <span class="error" id="companyName-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role/Position</label>
+                    <input type="text" class="form-control" id="role" placeholder="Role/Position">
+                    <span class="error" id="role-error"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                    <span class="error" id="firstName-error"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                    <span class="error" id="lastName-error"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Email">
+                <span class="error" id="email-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" id="phone" placeholder="Phone">
+                <span class="error" id="phone-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="message">Leave a Message</label>
+                <textarea class="form-control" id="message" placeholder="Leave your message"></textarea>
+                <span class="error" id="message-error"></span>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="newsletter">
+                <label class="form-check-label" for="newsletter">I would like to keep up to date with the latest news
+                    from Fair Food</label>
+                <span class="error" id="newsletter-error"></span>
+            </div>
+            <div class="form-group form-check hidden" id="receipt-group">
+                <input type="checkbox" class="form-check-input" id="receipt">
+                <label class="form-check-label" for="receipt">Yes, please email me a receipt of this donation</label>
+                <span class="error" id="receipt-error"></span>
+            </div>
+            <button type="button" id="proceed-payment" class="btn btn-success">Proceed to Payment</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const amountGroup = document.getElementById('amount-group');
+            const companyGroup = document.getElementById('company-group');
+            const receiptGroup = document.getElementById('receipt-group');
+            const individualBtn = document.getElementById('individual-btn');
+            const companyBtn = document.getElementById('company-btn');
+            const donate11Button = document.getElementById('donate-11');
+            
+            // Set default selection for individual
+            donate11Button.classList.add('active');
+
+            // Hide company group and receipt group by default
+            companyGroup.style.display = 'none';
+            receiptGroup.style.display = 'none';
+
+            // Function to handle individual and company button clicks
+            individualBtn.addEventListener('click', function () {
+                individualBtn.classList.add('btn-success');
+                individualBtn.classList.remove('btn-outline-success');
+                companyBtn.classList.add('btn-outline-success');
+                companyBtn.classList.remove('btn-success');
+                companyGroup.style.display = 'none';
+                receiptGroup.style.display = 'none';
+                document.querySelectorAll('.donation-buttons .col-md-3').forEach(function (col) {
+                    col.style.display = 'block';
+                });
+                amountGroup.style.display = 'none';
+                donate11Button.classList.add('active');
+            });
+
+            companyBtn.addEventListener('click', function () {
+                companyBtn.classList.add('btn-success');
+                companyBtn.classList.remove('btn-outline-success');
+                individualBtn.classList.add('btn-outline-success');
+                individualBtn.classList.remove('btn-success');
+                companyGroup.style.display = 'block';
+                receiptGroup.style.display = 'block';
+                document.querySelectorAll('.donation-buttons .col-md-3').forEach(function (col) {
+                    col.style.display = 'none';
+                });
+                amountGroup.style.display = 'block';
+            });
+
+            // Function to handle donation button clicks
+            document.querySelectorAll('.donation-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    document.querySelectorAll('.donation-btn').forEach(function (btn) {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                    if (button.id === 'donate-other') {
+                        amountGroup.style.display = 'block';
+                    } else {
+                        amountGroup.style.display = 'none';
+                    }
+                });
+            });
+
+            // Add real-time validation
+            const inputs = document.querySelectorAll('#donation-form input, #donation-form textarea');
+            inputs.forEach(input => {
+                input.addEventListener('keyup', validateForm);
+            });
+
+            document.getElementById('proceed-payment').addEventListener('click', function () {
+                // Validate the form on submit
+                const isValid = validateForm();
+
+                if (isValid) {
+                    // Get the selected amount
+                    let selectedAmount;
+                    const donateOtherButton = document.getElementById('donate-other');
+                    if (donateOtherButton.classList.contains('active') || companyBtn.classList.contains('btn-success')) {
+                        selectedAmount = document.getElementById('amount').value;
+                    } else {
+                        selectedAmount = document.querySelector('.donation-btn.active').textContent.trim().split(' ')[0];
+                    }
+
+                    // Get form data
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const message = document.getElementById('message').value;
+
+                    if (individualBtn.classList.contains('btn-success')) {
+                        // Save individual form data to local storage
+                        localStorage.clear();
+                        localStorage.setItem('donateAmount', selectedAmount);
+                        localStorage.setItem('firstName', firstName);
+                        localStorage.setItem('lastName', lastName);
+                        localStorage.setItem('email', email);
+                        localStorage.setItem('phone', phone);
+                        localStorage.setItem('message', message);
+                        // Optionally, you can redirect to another page or show a confirmation message
+                        alert('Your individual donation data has been saved.');
+                    } else {
+                        // Get company form data
+                        const companyName = document.getElementById('companyName').value;
+                        const role = document.getElementById('role').value;
+                        // Save company form data to local storage
+                        localStorage.clear();
+                        localStorage.setItem('donateAmount', selectedAmount);
+                        localStorage.setItem('firstName', firstName);
+                        localStorage.setItem('lastName', lastName);
+                        localStorage.setItem('email', email);
+                        localStorage.setItem('phone', phone);
+                        localStorage.setItem('message', message);
+                        localStorage.setItem('companyName', companyName);
+                        localStorage.setItem('role', role);
+                        // Optionally, you can redirect to another page or show a confirmation message
+                        alert('Your company donation data has been saved.');
+                    }
+
+                    // Reset the form
+                    document.getElementById('donation-form').reset();
+                    individualBtn.click(); // Reset to individual form by default
+                }
+            });
+
+            function validateForm() {
+                let isValid = true;
+
+                // Clear previous error messages
+                document.querySelectorAll('.error').forEach(function (span) {
+                    span.textContent = '';
+                });
+
+                // Validate amount if other is selected or company form is shown
+                const amount = document.getElementById('amount').value;
+                if ((document.getElementById('donate-other').classList.contains('active') || companyBtn.classList.contains('btn-success')) && (amount === '' || parseFloat(amount) <= 0)) {
+                    document.getElementById('amount-error').textContent = 'Please enter a valid amount.';
+                    isValid = false;
+                }
+
+                // Validate company name and role if company form is shown
+                if (companyBtn.classList.contains('btn-success')) {
+                    const companyName = document.getElementById('companyName').value;
+                    const role = document.getElementById('role').value;
+                    if (companyName.trim() === '') {
+                        document.getElementById('companyName-error').textContent = 'Company name is required.';
+                        isValid = false;
+                    }
+                    if (role.trim() === '') {
+                        document.getElementById('role-error').textContent = 'Role/position is required.';
+                        isValid = false;
+                    }
+                }
+
+                // Validate first name
+                const firstName = document.getElementById('firstName').value;
+                if (firstName.length < 3 || firstName.length > 12 || /\d/.test(firstName)) {
+                    document.getElementById('firstName-error').textContent = 'First name must be between 3 and 12 characters and not contain numbers.';
+                    isValid = false;
+                }
+
+                // Validate last name
+                const lastName = document.getElementById('lastName').value;
+                if (lastName.length < 3 || lastName.length > 12 || /\d/.test(lastName)) {
+                    document.getElementById('lastName-error').textContent = 'Last name must be between 3 and 12 characters and not contain numbers.';
+                    isValid = false;
+                }
+
+                // Validate email
+                const email = document.getElementById('email').value;
+                const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                if (!emailPattern.test(email)) {
+                    document.getElementById('email-error').textContent = 'Invalid email address.';
+                    isValid = false;
+                }
+
+                // Validate phone
+                const phone = document.getElementById('phone').value;
+                if (phone.length !== 11 || !/^\d{11}$/.test(phone)) {
+                    document.getElementById('phone-error').textContent = 'Phone number must be 11 digits.';
+                    isValid = false;
+                }
+
+                // Validate message
+                const message = document.getElementById('message').value;
+                if (message.trim() === '') {
+                    document.getElementById('message-error').textContent = 'Message cannot be empty.';
+                    isValid = false;
+                }
+
+                // Validate newsletter checkbox
+                const newsletter = document.getElementById('newsletter').checked;
+                if (!newsletter) {
+                    document.getElementById('newsletter-error').textContent = 'You must agree to keep up to date with the latest news from Fair Food.';
+                    isValid = false;
+                }
+
+                // Validate receipt checkbox if company form is shown
+                if (companyBtn.classList.contains('btn-success')) {
+                    const receipt = document.getElementById('receipt').checked;
+                    if (!receipt) {
+                        document.getElementById('receipt-error').textContent = 'You must agree to receive an email receipt of this donation.';
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+        });
+    </script>
+</body>
+
+</html>
